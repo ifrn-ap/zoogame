@@ -1,0 +1,125 @@
+<%-- 
+    Document   : Log
+    Created on : 19/03/2014, 14:40:47
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+   
+        <style>
+            html{width: 100%;
+                 height: 100%;
+                 border: 0px;
+            background-image: url("imagens/l.jpg"); 
+            background-repeat: no-repeat;
+            background-position: right bottom;
+            
+            
+            }
+            body{width: 100%;
+                 height: 160px;              
+                 padding:4px;
+                border: 2px;
+                background: green;
+                background-position: right;
+                
+            }
+           
+            h3{                
+                color:white;
+            }
+            div.ex
+            {
+
+            padding:4px;
+
+            border: 2px;
+            background: green;
+            width: 100%;
+            height: 100%;
+            }
+
+            h1.right{
+                color:white;
+                background-position: right;
+                
+            }
+
+           
+            
+            </style>
+    </head>
+    
+   
+   
+    <body>
+        
+    <div class="ex1">     
+        
+        <form id = "fmInserirUs" name="PagInicial" method = "POST" action="Logar.jsp?acao=logar">
+            <h1 class="right">Bem vindo</h1>
+          
+            
+            Login:<input type="text" name="usuario" value="" size="22" />
+            Senha:<input type="password" name="senha" value="" size="22" />
+           <input type="submit" value="Entrar" name="botao4" /><br>
+        
+       
+            
+ <a href="http://localhost:8080/ZOOGame/Cadastrar.jsp">Registrar</a>
+ 
+ <a href="http://localhost:8080/ZOOGame/Professor.jsp">Área do Professor</a>
+                   
+               <%  
+                   
+                   String usuario1 = null;
+                   String senha1 = null;
+             
+                   try {
+                       String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+                       Connection connection = null; 
+                       Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+                       connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+                       Statement stm = connection.createStatement(); 
+                       
+                      ResultSet rs = stm.executeQuery("SELECT login, senha, ID from cadastro");
+                       while(rs.next()){
+                       
+                           usuario1 = rs.getString(1);
+                           senha1 = rs.getString(2);
+                           
+                           if((usuario1.equals(request.getParameter("usuario"))) && (senha1.equals(request.getParameter("senha")))){
+                           	
+                           	
+                           	int id = rs.getInt(3); 
+                           	session.setAttribute ("contID", id); 
+                           	
+                           	
+                           response.sendRedirect("inicial.jsp");
+                           }
+                       
+                       }
+                       
+                       
+                       connection.close();
+                       }catch(Exception ex){
+                       out.println("Unable to connect to database"+ex);
+                       } 
+            
+%>
+            
+           
+        </form>
+   </div>
+    </body>
+   
+</html>
