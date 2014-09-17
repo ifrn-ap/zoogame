@@ -1,0 +1,107 @@
+<%-- 
+    Document   : altUsuario
+    Created on : 01/04/2014, 10:01:44
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Statement"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Alterar Questão...</h1>
+        
+        
+        
+         <% 
+         
+             
+             if(request.getParameter("acao") == null)
+        { 
+        out.print("-----NÃO HOUVE AÇÃO-----");
+        try {
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+            if(!connection.isClosed())
+                 out.println("Successfully connected to " + "MySQL server using TCP/IP...");
+           
+ ResultSet rs = stm.executeQuery("SELECT * from questions");            
+                 connection.close();
+                 
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            } 
+        %>
+        
+        <form id = "fmInserirUs" name="alterar" method="POST" action="altQuestao.jsp?acao=alteracao">
+        
+             Questão:      <input type="text" name="q1"   value="<%=request.getParameter("pergunta")%>" size="20" /><br>
+            Alternativa A:<input type="text" name="altA" value="<%=request.getParameter("alternativaA")%>" size="20" /><br>
+            Alternativa B:<input type="text" name="altB" value="<%=request.getParameter("alternativaB")%>" size="20" /><br>
+            Alternativa C:<input type="text" name="altC" value="<%=request.getParameter("alternativaC")%>" size="20" /><br>
+            Alternativa D:<input type="text" name="altD" value="<%=request.getParameter("alternativaD")%>" size="20" /><br>
+            Alternativa E:<input type="text" name="altE" value="<%=request.getParameter("alternativaE")%>" size="20" /><br>
+          
+            <h4> Selecione a alternativa correta: </h4> <select name="certa">  
+                <option>A</option> 
+                <option>B</option> 
+                <option>C</option> 
+                <option>D</option> 
+                <option>E</option>
+            </select><br>
+            <br> 
+            Area técnica:<br>
+            <select name="area">
+                <option>Caprinos</option>
+                <option>Ovinos</option>
+                <option>Suinos</option>
+                <option>Bovinos</option>
+                <option>Apicultura</option>   
+            </select> <br>
+            
+            <input type="submit" value="CONFIRMAR ALTERAÇÃO" name="alterarQ" />
+            
+            <a href="http://localhost:8080/teste/contQuestoes.jsp">
+ <input type="submit" value="CANCELAR" name="cancelar" /></a>
+            <input type="text" name="codigo" value="<%=request.getParameter("num_questao")%>">
+           
+        </form>        
+        <% } 
+        else
+        {
+            if((request.getParameter("q1").length() <= 0) || (request.getParameter("altA").length() <= 0) || (request.getParameter("altB").length() <= 0) || (request.getParameter("altC").length() <= 0) || (request.getParameter("altD").length() <= 0) || (request.getParameter("altE").length() <= 0)) 
+                {
+                response.sendRedirect("altQuestao.jsp");
+                } else {
+            
+            try {
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+            if(!connection.isClosed())
+                 
+                 out.println("Successfully connected to " + "MySQL server using TCP/IP...");
+                 stm.executeUpdate("update questions set pergunta = '"+request.getParameter("q1")+"', alternativaA = '"+request.getParameter("altA")+"', alternativaB = '"+request.getParameter("altB")+"', alternativaC = '"+request.getParameter("altC")+"', alternativaD = '"+request.getParameter("altD")+"', alternativaE = '"+request.getParameter("altE")+"', correta = '"+request.getParameter("certa")+"', area = '"+request.getParameter("area")+"' where num_questao = "+request.getParameter("codigo"));
+                 response.sendRedirect("contQuestoes.jsp");
+                 connection.close();
+                 
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            } 
+        } 
+        } %> 
+        
+    </body>
+</html>
