@@ -1,0 +1,68 @@
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+ <a href="http://localhost:8080/ZOOGame/inicial.jsp">
+        <input type="submit" value="Voltar" name="volta" /></a>
+
+<table border="1" >
+        
+        <tr bgcolor="#6a8fd3">            
+            <td>POSIÇÃO</td>
+            <td>NOME</td>
+            <td>PONTUAÇÃO</td>
+                       
+        </tr>
+        
+        <% 
+        
+        int posicao = 1;
+             
+       try {
+           
+           String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+          
+           ResultSet rs = stm.executeQuery("SELECT nome, pontos from cadastro order by pontos DESC");
+          
+             while(rs.next())
+             { %>
+          
+        <tr>
+            
+            <td><%=posicao%></td>
+            <td><%=rs.getString(1)%></td>
+            <td><%=rs.getInt(2)%></td>
+
+            
+            
+        </tr>
+        <%
+        
+               posicao = posicao + 1;
+        %>
+        
+      <%    }
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            }
+%>
+        
+        </table>
+        
+
+</body>
+</html>
