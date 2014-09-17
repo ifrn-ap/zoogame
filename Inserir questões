@@ -1,0 +1,123 @@
+<%-- 
+    Document   : inserirQ
+    Created on : 28/03/2014, 15:30:05
+    Author     : Alex de Paiva
+--%>
+
+
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <style>
+            html{width: 100%;
+                 height: 100%;
+                 border: 0px;
+            background-image: url("imagens/pi.jpg"); 
+            background-repeat: no-repeat;
+            background-position: right bottom;
+            }
+            
+            #box1{
+                width: 700px;
+                margin: auto;
+            }
+                        
+            #box{
+               width: 700px;
+               margin: auto;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div id="box1">
+        <br>
+        <br>
+        </div>
+        <% if(request.getParameter("acao") == null)
+        { 
+        %>
+                                                                 
+        <form id = "fmInserirUs" name="s" method = "POST" action="inserirQ.jsp?acao=insercao">
+            <div id="box">
+           <input type="text" name="q1"   value="" placeholder="Questão"  size="20" /><br>
+           <input type="text" name="altA" value="" placeholder="Alternativa A" size="20" /><br>
+           <input type="text" name="altB" value="" placeholder="Alternativa B" size="20" /><br>
+           <input type="text" name="altC" value="" placeholder="Alternativa C" size="20" /><br>
+           <input type="text" name="altD" value="" placeholder="Alternativa D" size="20" /><br>
+           <input type="text" name="altE" value="" placeholder="Alternativa " size="20" /><br>
+          
+            <h3> Selecione a alternativa correta: </h3> <select name="correta">  <option>A</option> <option>B</option> <option>C</option> <option>D</option> <option>E</option> </select><br>
+            
+            <h3>Area técnica:</h3>
+            <select name="area">
+                <option>Caprinos</option>
+                <option>Ovinos</option>
+                <option>Suinos</option>
+                <option>Bovinos</option>
+                <option>Apicultura</option> 
+                <option>Geral</option> 
+            </select> <br>
+           
+            <h3>Nível:</h3>
+            <select name="nivel">
+                <option>Nivel 1</option>
+                <option>Nivel 2</option>
+                <option>Nivel 3</option>
+                <option>Nivel 4</option>
+                <option>Nivel 5</option> 
+             
+            </select> <br>
+             
+ 		<h3>Informe uma Dica, para a pergunta:</h3>
+ 		  <textarea name="dica"cols="30" rows="4"></textarea>
+             
+            <input type="submit" value="Inserir" name="inserirQ" />
+            
+             <a href="http://localhost:8084/ZOOGame/pagInicial.jsp">
+ 					<input type="submit" value="Limpar" name="limpar" /></a>
+ 					
+            <a href="http://localhost:8080/ZOOGame/pagInicial.jsp">Voltar</a>
+ 
+ 
+ 
+            
+            </div>
+        
+        </form>
+        
+              <% } 
+        else
+        {
+        
+            if((request.getParameter("q1").length() <= 0) || (request.getParameter("altA").length() <= 0) || (request.getParameter("altB").length() <= 0) || (request.getParameter("altC").length() <= 0) || (request.getParameter("altD").length() <= 0) || (request.getParameter("altE").length() <= 0) ||(request.getParameter("correta").length() <= 0) || (request.getParameter("area").length() <= 0) || (request.getParameter("nivel").length() <=0) ||(request.getParameter("dica").length() <=0)) 
+                {
+                response.sendRedirect("inserirQ.jsp");
+                } else {
+            
+            try {
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+            if(!connection.isClosed())
+                 out.println("Successfully connected to " + "MySQL server using TCP/IP...");
+                 stm.executeUpdate("insert into questions (pergunta, alternativaA, alternativaB, alternativaC, alternativaD, alternativaE, correta, area, nivel, dica) values ('"+request.getParameter("q1")+"','"+request.getParameter("altA")+"','"+request.getParameter("altB")+"','"+request.getParameter("altC")+"','"+request.getParameter("altD")+"','"+request.getParameter("altE")+"', '"+request.getParameter("correta")+"','"+request.getParameter("area")+"','"+request.getParameter("nivel")+"','"+request.getParameter("dica")+"')");
+                 connection.close();
+            
+           response.sendRedirect("inserirQ.jsp");
+           
+                    }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            } 
+        }  
+        } %> 
+    </body>
+</html>
