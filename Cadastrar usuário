@@ -1,0 +1,189 @@
+<%-- 
+    Document   : Cadastrar
+    Created on : 19/03/2014, 14:35:17
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <style>
+            html{
+                height: 100%;
+                background-image: url("imagens/ve.jpg");
+                background-repeat: repeat-x;
+                background-position:right bottom;                  
+            }
+            head{
+                width: 100%;
+                height: 160px;              
+                padding:4px;
+                border: 2px;
+                background: green;
+                background-position: right;
+            }
+            login{
+                font-size: 30px;
+                
+            }
+            #mn{
+                width: 900px;
+                margin: auto;
+            }
+            
+           
+        
+        </style>
+    </head>
+    <body>
+        
+        <% if(request.getParameter("acao") == null)
+        { 
+        
+        %>
+        <div id="mn">
+        <form id="frmInserirUs" name="frmInserirUs" method="POST" action="Cadastrar.jsp?acao=cadastro">
+               
+            <br>
+            <br>
+            <br>
+            Login:<input  type="text" name="login" value="" placeholder="Login" size="20" maxlenght="10" tabindex="4" /><br>
+            Senha:<input type="password" name="senha1" value="" placeholder="Senha" size="20" /><br>
+            Confirmar Senha:<input type="password" name="senha2" value="" placeholder="Confirmar senha" size="20" /><br>
+            Nome:<input type="text" name="nome" value="" placeholder="Nome" size="20" /><br>
+            Sobrenome:<input type="text" name="sobrenome" value="" placeholder="Sobrenome" size="20" /><br>
+            E-mail:<input type="text" name="e-mail" value="" placeholder="e-mail" size="20" /><br>
+            <h4>Data de nascimento</h4>
+            <select name="dia">
+                <option>Dia</option>
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+                <option>21</option>
+                <option>22</option>
+                <option>23</option>
+                <option>24</option>
+                <option>25</option>
+                <option>26</option>
+                <option>27</option>
+                <option>28</option>
+                <option>29</option>
+                <option>30</option>
+                <option>31</option>
+            </select>
+            <select name="mes">
+                <option>Mês</option>
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="ano"> 
+                <option>Ano</option>
+                <option>1980</option>
+                <option>1981</option>
+                <option>1982</option>
+                <option>1983</option>
+                <option>1984</option>
+                <option>1985</option>
+                <option>1986</option>
+                <option>1987</option>
+                <option>1988</option>
+                <option>1989</option>
+                <option>1990</option>
+                <option>1991</option>
+                <option>1992</option>
+                <option>1993</option>
+                <option>1994</option>
+                <option>1995</option>
+                <option>1996</option>
+                <option>1997</option>
+                <option>1998</option>
+                <option>1999</option>
+                <option>2000</option>
+                <option>2001</option>
+                <option>2002</option>
+                <option>2003</option>
+                <option>2004</option>
+                <option>2005</option>
+                <option>2006</option>
+                <option>2007</option>
+                <option>2008</option>
+                <option>2009</option>
+                <option>2010</option>
+                <option>2011</option>
+                <option>2012</option>
+                <option>2013</option>
+                <option>2014</option>
+            </select><br> 
+            <input type="radio" name="sexo" value="Masculino" /> Masculino
+            <input type="radio" name="sexo" value="Feminino" /> Feminino<br>
+            <br>
+            <br>
+            <input  type="submit" value="Cadastrar" name="botao2" />          
+            
+            <a href="http://localhost:8084/ZOOGame/Logar.jsp">
+ 					<input type="reset" value="Limpar" name="limpar" /></a>
+
+            <a href="http://localhost:8080/ZOOGame/Logar.jsp">Voltar</a>
+  					
+        </div>
+            </form>
+        
+        <% } 
+        else
+        {
+            if((request.getParameter("login").length() <= 0) || (request.getParameter("senha1").length() <= 0) || (request.getParameter("senha2").length() <= 0) || (request.getParameter("nome").length() <= 0) || (request.getParameter("sobrenome").length() <= 0) || (request.getParameter("e-mail").length() <= 0) || (request.getParameter("dia").length() <= 0) || (request.getParameter("mes").length() <= 0) || (request.getParameter("ano").length() <= 0) || (request.getParameter("sexo").length() <= 0)) 
+                {
+                response.sendRedirect("Cadastrar.jsp");
+                } else {
+            
+            try {
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+            if(!connection.isClosed())
+                 stm.executeUpdate("insert into cadastro (login, senha, conf_senha, nome, sobrenome, email, sexo, dataNascimento) values ('"+request.getParameter("login")+"','"+request.getParameter("senha1")+"','"+request.getParameter("senha2")+"','"+request.getParameter("nome")+"','"+request.getParameter("sobrenome")+"','"+request.getParameter("e-mail")+"','"+request.getParameter("sexo")+"','"+request.getParameter("ano")+request.getParameter("mes")+request.getParameter("dia")+"')"); 
+                 connection.close(); 
+                 
+                 response.sendRedirect("Cadastrar.jsp");
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            } 
+        } 
+        } %> 
+    </body>
+</html>
