@@ -1,0 +1,129 @@
+<%-- 
+    Document   : contUsuario
+    Created on : 31/03/2014, 09:13:12
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Statement"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+        
+        
+        <title>JSP Page</title>
+        <style>
+            html{width: 100%;
+                 height: 100%;
+                 border: 0px;
+            background-image: url("imagens/g.jpg"); 
+            background-repeat: repeat-y;
+            background-position: right bottom;
+            
+            
+            }
+            body{width: 100%;
+                 height: 80px;              
+                 padding:4px;
+                border: 2px;
+                background: green;
+                background-position: right;
+                
+            }
+            table{
+                background-position: right;
+                width: 1150px;
+            }
+            
+        </style>
+    </head>
+    <body>
+        
+         <h1>Controle de Alunos</h1>
+         <br>
+        <a href="http://localhost:8080/ZOOGame/pagInicial.jsp">Voltar</a>  
+         
+         <a href="http://localhost:8080/ZOOGame/imprimeUsuario.jsp">Relatório</a>  
+        <table border="4" >
+        
+        <tr bgcolor="#ffff00">            
+            <td>LOGIN</td>
+            <td>SENHA</td>
+            <td>NOME</td>
+            <td>SOBRENOME</td>
+            <td>E-MAIL</td>
+            <td>SEXO</td>
+            <td>DATA DE NASCIMENTO</td>
+            <td>ID</td>
+            <td>PONTOS</td> 
+            <td>ACERTOS</td>
+            <td>ERROS</td>
+            <td>EXCLUIR</td>
+            <td>ALTERAR</td>
+            
+        </tr>
+        
+        <% 
+             
+        try {
+            
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+             Connection connection = null; 
+             Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+             connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+             Statement stm = connection.createStatement();
+           if(request.getParameter("acao1") != null){
+            
+                stm.executeUpdate("DELETE from cadastro WHERE ID = "+request.getParameter("codigo"));
+                
+            }
+           ResultSet rst = stm.executeQuery("SELECT * from cadastro");
+           
+           while(rst.next())
+           { 
+           %>
+             
+          
+                    
+        <tr>
+            
+                    <td><%=rst.getString("login")%></td>
+            <td><%=rst.getString("senha")%></td>
+            <td><%=rst.getString("nome")%></td>
+            <td><%=rst.getString("sobrenome")%></td>
+            <td><%=rst.getString("email")%></td>
+            <td><%=rst.getString("sexo")%></td>
+            <td><%=rst.getString("dataNascimento")%></td>
+            <td><%=rst.getString("ID")%></td>
+            <td><%=rst.getString("pontos")%></td>
+            <td><%=rst.getString("acertos")%></td>
+            <td><%=rst.getString("erros")%></td>
+           
+            
+          
+            <td><a href="contUsuario.jsp?acao1=excluir&amp; &codigo=<%=rst.getString("ID")%>">
+                <input type="submit" value="Excluir" name="botao03" /></a></td>
+               
+     
+          
+             <td><a href="altUsuario.jsp?acao2=alteracao&amp; &login=<%=rst.getString("login")%>&senha=<%=rst.getString("senha")%>&nome=<%=rst.getString("nome")%>&sobrenome=<%=rst.getString("sobrenome")%>&email=<%=rst.getString("email")%>&sexo=<%=rst.getString("sexo")%>&dataNascimento=<%=rst.getString("dataNascimento")%>&ID=<%=rst.getString("ID")%>&pontos=<%=rst.getString("pontos")%>&acertos=<%=rst.getString("acertos")%>&erros=<%=rst.getString("erros")%>">
+             <input type="submit" value="Alterar" name="botao05" /></a></td>
+                 
+            
+        </tr>
+        
+      <%   }
+             
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            }
+%>
+        
+        </table>
+        
+    </body>
+</html>
