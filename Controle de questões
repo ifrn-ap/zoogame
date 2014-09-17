@@ -1,0 +1,122 @@
+<%-- 
+    Document   : contQuestoes
+    Created on : 01/04/2014, 16:40:15
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+        <title>JSP Page</title>
+        <style>
+            html{width: 100%;
+                 height: 100%;
+                 border: 0px;
+            background-image: url("imagens/g.jpg"); 
+            background-repeat: repeat-y;
+            background-position: right bottom;
+            
+            
+            }
+            body{width: 100%;
+                 height: 80px;              
+                 padding:4px;
+                border: 2px;
+                background: green;
+                background-position: right;
+                
+            }
+            table{
+                background-position: right;
+                width: 1150px;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <h1 class="ex">Questões e Respostas</h1>
+        <br>
+        <a href="http://localhost:8080/ZOOGame/imprimeQuestoes.jsp">Relatório</a>  
+        <a href="http://localhost:8080/ZOOGame/pagInicial.jsp">Voltar</a>  
+        
+        
+        <table border="4" >
+        
+        <tr bgcolor="#ffff00">            
+            <td>Pergunta</td>
+            <td>Alternativa A</td>
+            <td>Alternativa B</td>
+            <td>Alternativa C</td>
+            <td>Alternativa D</td>
+            <td>Alternativa E</td>
+            <td>Alt.Correta</td> 
+            <td>Area</td>
+            <td>Cd. Questão</td>
+            <td>Excluir</td>
+            <td>Alterar</td>
+        </tr>
+        
+        <% 
+             
+       try {
+           
+           String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+           if(request.getParameter("acao1") != null){
+            
+               stm.executeUpdate("DELETE  from questions WHERE num_questao = "+request.getParameter("codigo"));
+                
+            }
+           ResultSet rs = stm.executeQuery("SELECT * from questions");
+          
+             while(rs.next())
+             {
+            	 
+            	 %>
+             
+          
+                    
+        <tr>
+            
+            <td><%=rs.getString("pergunta")%></td>
+            <td><%=rs.getString("alternativaA")%></td>
+            <td><%=rs.getString("alternativaB")%></td>
+            <td><%=rs.getString("alternativaC")%></td>
+            <td><%=rs.getString("alternativaD")%></td>
+            <td><%=rs.getString("alternativaE")%></td>            
+            <td><%=rs.getString("correta")%></td>
+            <td><%=rs.getString("area")%></td>
+            <td><%=rs.getString("num_questao")%></td>
+            
+            
+             <td><a href="contQuestoes.jsp?acao1=excluir&amp; &codigo=<%=rs.getString("num_questao")%>">
+             <input type="submit" value="Excluir" name="botao03" /></a></td>
+             <td><a href="altQuestao.jsp?acao2=alteracao&amp; &pergunta=<%=rs.getString("pergunta")%>&alternativaA=<%=rs.getString("alternativaA")%>&alternativaB=<%=rs.getString("alternativaB")%>&alternativaC=<%=rs.getString("alternativaC")%>&alternativaD=<%=rs.getString("alternativaD")%>&alternativaE=<%=rs.getString("alternativaE")%>&correta=<%=rs.getString("correta")%>&area=<%=rs.getString("area")%>&num_questao=<%=rs.getString("num_questao")%>">
+             <input type="submit" value="Alterar" name="botao04" /></a></td>
+          
+                   
+            
+        </tr>
+        
+      <%    }
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            }
+%>
+        
+        </table>
+        
+        
+        
+    </body>
+</html>
