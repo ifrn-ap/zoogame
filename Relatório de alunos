@@ -1,0 +1,112 @@
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Statement"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        
+        <title>JSP Page</title>
+        <style>
+           html{width: 100%;
+                 height: 100%;
+                 border: 0px;
+            background-image: url("imagens/azul.jpg"); 
+            background-repeat: repeat-y;
+            background-position: right bottom;
+            
+            
+            }
+            body{width: 100%;
+                 height: 80px;              
+                 padding:4px;
+                border: 2px;
+                background: blue;
+                background-position: right;                
+            }
+            table{
+                
+                background-position: right;
+                width: 1200px;;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <br>
+         <h1>Relatório de alunos</h1>
+        <a href="http://localhost:8080/ZOOGame/pagInicial.jsp">Voltar</a>  
+         
+         
+          
+         <input type="button" value="Imprimir" name="Imprimir" id="Imprimir"  value="Imprimir" onclick="window.print();"
+                />
+                
+                
+        <table border="1" >
+        
+        <tr bgcolor="#6a8fd3">            
+            <td>LOGIN</td>
+            <td>SENHA</td>
+            <td>NOME</td>
+            <td>SOBRENOME</td>
+            <td>E-MAIL</td>
+            <td>DATA NASCIMENTO</td>
+            <td>SEXO</td>
+            <td>PONTOS</td>
+            <td>ACERTOS</td>            
+            <td>ERROS</td>
+            
+        </tr>
+        
+        <% 
+             
+       try {
+           
+           String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+          
+           ResultSet rs = stm.executeQuery("SELECT * from cadastro");
+          
+             while(rs.next())
+             { %>
+             
+          
+                    
+        <tr>
+            
+            <td><%=rs.getString("login")%></td>
+            <td><%=rs.getString("senha")%></td>
+            <td><%=rs.getString("nome")%></td>
+            <td><%=rs.getString("sobrenome")%></td>
+            <td><%=rs.getString("email")%></td>
+            <td><%=rs.getString("dataNascimento")%></td>
+            <td><%=rs.getString("sexo")%></td>
+            <td><%=rs.getString("pontos")%></td>
+            <td><%=rs.getString("acertos")%></td>
+            <td><%=rs.getString("erros")%></td>
+            
+            
+    
+            
+          
+            
+            
+        </tr>
+        
+      <%    }
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            }
+%>
+        
+        </table>
+        
+    </body>
+</html>
