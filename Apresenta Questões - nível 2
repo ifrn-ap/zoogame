@@ -1,0 +1,228 @@
+<%-- 
+    Document   : apresentaQ
+    Created on : 08/04/2014, 08:18:56
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.lang.Integer"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Random"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+ <%@page import="java.applet.Applet"%>
+<%@page import="javax.swing.JOptionPane" %>
+
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JSP Page</title>
+<style>
+html {
+	width: 100%;
+	height: 100%;
+	border: 0px;
+	background-image: url("imagens/grama.jpg");
+	background-repeat: repeat-y;
+	background-position: right bottom;
+}
+
+body {
+	width: 100%;
+	height: 80px;
+	padding: 4px;
+	border: 2px;
+	background: green;
+	background-position: right;
+}
+
+#op {
+	color: white;
+}
+</style>
+
+
+
+</head>
+
+<body>
+
+
+	<form name="apresenta" method="POST"
+	action="apresentaNivel1.jsp?acao=apresentacao">
+
+		<h1 id="op">Questões Nível 2</h1>
+		<%
+		
+		//$GET['p']
+			int old_acertos = 0;
+			int old_erros = 0;
+			int cq = 1;
+			int acerto = 0;
+			int erro = 0;
+			int recebe = 0;
+			int recebe2 = 0;
+			int contador = 0;
+			int contador2 = 0;
+			int old_pontos = 0;
+			int recebe3 = 0;
+			String recebe10 = null;	
+			String recebeDica = null;
+			Connection connection;
+			List<Integer> recebe4 = new ArrayList<Integer>();
+			
+			try {
+
+				String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+				connection = null;
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				connection = DriverManager.getConnection(connectionURL, "root",
+						"a99l10e63x46");
+				Statement stm = connection.createStatement();
+				Statement stm2 = connection.createStatement();
+				Statement stm3 = connection.createStatement();
+				Statement stm4 = connection.createStatement();
+				
+				//========================= GERA QUESTÃO ALEATÓRIA =================================
+						
+				ResultSet rst = stm4.executeQuery("SELECT num_questao from questions where nivel = 'Nivel 2'");
+				
+				
+				while(rst.next()){
+					recebe4.add(rst.getInt(1));	
+				}
+				
+				session.setAttribute("questoes", recebe);
+				 session.setAttribute("quest_respondidas", new ArrayList());
+               				
+				Random gerador = new Random();
+				int xa = gerador.nextInt(recebe4.size() - 1);
+				int id_questao = recebe4.get(xa);				
+			 
+               	session.setAttribute ("quest_respondidas", 1); 
+				
+                 //============================================================================	
+                //========================= APRESENTA QUESTÃO =================================
+                 //============================================================================
+            		  
+              				//================= DICA ===================
+      		  
+				if(request.getParameter("acao1") != null){
+					
+				//========================= ATUALIZA PONTOS =========================
+						
+				ResultSet rs4 = stm4.executeQuery("SELECT dica from questions where num_questao = "+ id_questao +"");
+				while(rs4.next()){
+					recebeDica = rs4.getString(1);
+				}
+				
+					
+				  JOptionPane.showMessageDialog(null, recebeDica);
+				  //======== ATUALIZAR PONTOS NO BANCO DE DADOS ===================
+		           stm2.executeUpdate("update cadastro set acertos = 9 where ID = "+ session.getAttribute("contID")+"");
+	                
+	            }
+                 
+							//==================== FIM DICA ================
+               	
+				ResultSet rs = stm.executeQuery("SELECT * from questions where num_questao = "+ id_questao +"");
+				
+				while (rs.next()){
+					
+		%>
+		<br> Pergunta:
+		<%=rs.getString("pergunta")%>
+		<br> Alternativas:<br> <input
+			type="radio" name="alte<%=cq%>" value="A" />A:
+		<%=rs.getString("alternativaA")%><br> <input type="radio"
+			name="alte<%=cq%>" value="B" />B:
+		<%=rs.getString("alternativaB")%><br> <input type="radio"
+			name="alte<%=cq%>" value="C" />C:
+		<%=rs.getString("alternativaC")%><br> <input type="radio"
+			name="alte<%=cq%>" value="D" />D:
+		<%=rs.getString("alternativaD")%><br> <input type="radio"
+			name="alte<%=cq%>" value="E" />E:
+		<%=rs.getString("alternativaE")%><br> <br> <br>
+		
+		<a href="apresentaNivel2.jsp?acao1=consultar&amp" onclick=>Dica</a>
+
+
+		<%
+			if (request.getMethod().equalsIgnoreCase("POST")) {
+						String d = rs.getString(7);
+						String x = request.getParameter("alte" + cq);
+						if (d.equalsIgnoreCase(x)) {
+							out.println("Correto" + acerto);
+							acerto++;
+						} else {
+							out.println("Errado! "+ erro);
+							erro++;
+						}
+					}
+					cq++;
+				}
+				
+				//=========================== ATUALIZA PONTOS ===============================
+				
+				
+				ResultSet rs2 = stm2.executeQuery("SELECT acertos, erros from cadastro where ID = "+ session.getAttribute ("contID") +"");
+				 
+				while(rs2.next()){
+					old_acertos = rs2.getInt(1);
+					old_erros = rs2.getInt(2);
+				}
+				
+								
+				Statement stmtup = connection.createStatement();
+				int is = stmtup.executeUpdate("update cadastro"
+						+ " set acertos = " + (old_acertos + acerto) + " , "
+						+ " erros  = " + (old_erros + erro) + " where ID = "+session.getAttribute ("contID")+"");
+				rs2 = stmtup.getResultSet();
+								
+				 
+				
+				ResultSet rs3 = stm3.executeQuery("SELECT pontos from cadastro where ID = "+session.getAttribute ("contID")+"");
+				
+				while(rs3.next()){
+					old_pontos = rs3.getInt(1);
+					recebe = old_pontos;	
+			
+						recebe2 = 1;				
+				
+				}				
+				
+				Statement stmtup2 = connection.createStatement();				
+				
+				switch(recebe2) {
+				case 1:
+					contador = acerto - erro;
+						contador2 = contador * 3; 
+						int y = stmtup2.executeUpdate("update cadastro"
+					+ " set pontos = " + (old_pontos + contador2) + " where ID = "+session.getAttribute ("contID")+"");
+				break;			
+		
+				}
+			
+			
+			
+			
+			}catch (Exception ex) {
+				out.println("Fim Programa");
+				
+			}   
+		
+			
+		%>
+		
+		<input type="submit" value="OK" name="botao16" />
+
+	</form>
+	
+	
+</body>
+</html>
