@@ -1,0 +1,182 @@
+<%-- 
+    Document   : altUsuario
+    Created on : 01/04/2014, 10:01:44
+    Author     : Alex de Paiva
+--%>
+
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Statement"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Alterar Usuário...</h1>
+        
+        
+        
+         <% 
+         
+             
+             if(request.getParameter("acao") == null)
+        { 
+        out.print("-----NÃO HOUVE AÇÃO-----");
+        try {
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+            if(!connection.isClosed())
+                 out.println("Successfully connected to " + "MySQL server using TCP/IP...");
+           
+ ResultSet rs = stm.executeQuery("SELECT * from cadastro");            
+                 connection.close();
+                 out.println("login = "+request.getParameter("login"));  
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            } 
+        %>
+        
+        <form id = "fmInserirUs" name="alterar" method="POST" action="altUsuario.jsp?acao=alteracao">
+        
+            Novo Login:<input type="text" action="altUsuario.jsp" name="login" value="<%=request.getParameter("login")%>" size="20" maxlenght="10" /><br>
+            Nova Senha:<input type="password" name="senha1" value="<%=request.getParameter("senha")%>" size="20" /><br>
+            Confirmar Senha:<input type="password" name="senha2" value="<%=request.getParameter("conf_senha")%>" size="20" /><br>
+            Nome:<input type="text" name="nome" value="<%=request.getParameter("nome")%>" size="20" /><br>
+            Sobrenome:<input type="text" name="sobrenome" value="<%=request.getParameter("sobrenome")%>" size="20" /><br>
+            E-mail:<input type="text" name="e-mail" value="<%=request.getParameter("email")%>" size="20" /><br>
+            <h4>Data de nascimento</h4>
+          
+            <select name="dia">
+            <%-- value="<%=request.getParameter('dia')%>"> --%>
+                <option>Dia</option>
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+                <option>21</option>
+                <option>22</option>
+                <option>23</option>
+                <option>24</option>
+                <option>25</option>
+                <option>26</option>
+                <option>27</option>
+                <option>28</option>
+                <option>29</option>
+                <option>30</option>
+                <option>31</option>
+            </select>
+            <select name="mes">
+            <%--value = "<%=request.getParameter('mes')%>">  --%> 
+                <option>Mês</option>
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="ano">
+            <%-- value = "<%=request.getParameter('ano')%>"> --%>
+               <option>1980</option>
+                <option>1981</option>
+                <option>1982</option>
+                <option>1983</option>
+                <option>1984</option>
+                <option>1985</option>
+                <option>1986</option>
+                <option>1987</option>
+                <option>1988</option>
+                <option>1989</option>
+                <option>1990</option>
+                <option>1991</option>
+                <option>1992</option>
+                <option>1993</option>
+                <option>1994</option>
+                <option>1995</option>
+                <option>1996</option>
+                <option>1997</option>
+                <option>1998</option>
+                <option>1999</option>
+                <option>2000</option>
+                <option>2001</option>
+                <option>2002</option>
+                <option>2003</option>
+                <option>2004</option>
+                <option>2005</option>
+                <option>2006</option>
+                <option>2007</option>
+                <option>2008</option>
+                <option>2009</option>
+                <option>2010</option>
+                <option>2011</option>
+                <option>2012</option>
+                <option>2013</option>
+                <option>2014</option>
+            </select><br> 
+            
+            <input type="radio" name="sexo" value="<%=request.getParameter("sexo")%>" /> Masculino
+            <input type="radio" name="sexo" value="<%=request.getParameter("sexo")%>" /> Feminino<br>
+            CÓDIGO: <input type="text" name="codigo" readonly="readonly" value="<%=request.getParameter("ID")%>" /><br>
+            
+            <input type="submit" value="CONFIRMAR ALTERAÇÃO" name="botao2" />          
+            
+            <a href="http://localhost:8080/teste/contUsuario.jsp">
+ <input type="submit" value="CANCELAR" name="cancelar" /></a>
+            
+            </form>        
+        <% } 
+        else
+        {
+            if((request.getParameter("login").length() <= 0) || (request.getParameter("senha1").length() <= 0) || (request.getParameter("senha2").length() <= 0) || (request.getParameter("nome").length() <= 0) || (request.getParameter("sobrenome").length() <= 0) || (request.getParameter("e-mail").length() <= 0) || (request.getParameter("dia").length() <= 0) || (request.getParameter("mes").length() <= 0) || (request.getParameter("ano").length() <= 0) || (request.getParameter("sexo").length() <= 0)) 
+                {
+                response.sendRedirect("altUsuario.jsp");
+                } else {
+            
+            try {
+            String connectionURL = "jdbc:mysql://localhost:3306/zoogame";
+            Connection connection = null; 
+            Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+            connection = DriverManager.getConnection(connectionURL, "root", "a99l10e63x46");
+            Statement stm = connection.createStatement();
+            if(!connection.isClosed())
+                 out.println("Successfully connected to " + "MySQL server using TCP/IP...");
+                 stm.executeUpdate("update cadastro set login = '"+request.getParameter("login")+"', senha = '"+request.getParameter("senha1")+"', conf_senha = '"+request.getParameter("senha2")+"', nome = '"+request.getParameter("nome")+"', sobrenome = '"+request.getParameter("sobrenome")+"', email = '"+request.getParameter("e-mail")+"', dataNascimento = '"+request.getParameter("ano")+request.getParameter("mes")+request.getParameter("dia")+"', sexo = '"+request.getParameter("sexo")+"' where ID = "+request.getParameter("codigo"));
+                 response.sendRedirect("contUsuario.jsp");
+                 connection.close();
+            }catch(Exception ex){
+            out.println("Unable to connect to database"+ex);
+            } 
+        } 
+        } %> 
+        
+    </body>
+</html>
