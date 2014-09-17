@@ -1,4 +1,0 @@
-zoogame
-=======
-
-Projeto ZooGame
