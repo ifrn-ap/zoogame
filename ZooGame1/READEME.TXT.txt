@@ -1,5 +1,0 @@
-O ZOoGame se trata de um jogo online de perguntas e respostas direcionados para os alunos do curso de Zootecnia
-Seu acesso se da por:
-1 - Abra o navegador do computador (Google Chrome, Mozilla etc);
-2 - Insira o endereço do site do jogo;
-3 - Já pode utilizar.
